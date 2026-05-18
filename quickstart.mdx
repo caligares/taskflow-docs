@@ -1,0 +1,19 @@
+---
+title: 'Quickstart: Fluxos e Casos de Uso'
+description: 'Entenda como os recursos da API se conectam'
+---
+
+A API TaskFlow possui uma regra de dependência estrita. Para usar a API com sucesso, siga este fluxo de trabalho:
+
+### 1. Crie um Projeto primeiro
+Você deve criar um projeto usando o endpoint `POST /projects`. O sistema irá retornar um `project_id`. **Guarde este ID**, pois você precisará dele para criar as tarefas.
+
+### 2. Crie suas Tarefas
+Com o `project_id` em mãos, use o endpoint `POST /tasks` para criar tarefas vinculadas a esse projeto [2]. Toda nova tarefa nasce automaticamente com o status `pending`.
+
+### 3. Gerencie o Status
+Depois que a tarefa for criada, ela receberá um `task_id`. Use esse ID no endpoint `PATCH /tasks/{task_id}` para atualizar as informações ou mudar o status dela para `in_progress` ou `done`.
+
+### 4. Liste ou Delete
+- Para ver todas as tarefas de um projeto específico, use `GET /projects/{project_id}/tasks`.
+- Se precisar apagar permanentemente uma tarefa, utilize `DELETE /tasks/{task_id}`.
