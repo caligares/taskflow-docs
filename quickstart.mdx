@@ -1,0 +1,265 @@
+---
+title: Quickstart
+description: Create a project, add a task, and update its status in under 5 minutes.
+---
+
+This guide walks through the complete TaskFlow workflow from scratch. By the end, you will have created a project, added a task to it, updated the task status, and listed your tasks.
+
+## Before you begin
+
+You need your API key: `tf-live-4a8f2c1e9b3d7e6a`
+
+Include it in every request as a Bearer token:
+
+```
+Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a
+```
+
+<Note>
+  The API may take up to 60 seconds to respond on the first request if it has been idle. Wait and retry if you get a timeout.
+</Note>
+
+---
+
+## Step 1 — Create a project
+
+Every task must belong to a project, so start by creating one.
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://test-writechoice.onrender.com/projects \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "My First Project",
+    "description": "A project to test the TaskFlow API."
+  }'
+```
+
+```python Python
+import requests
+
+response = requests.post(
+    "https://test-writechoice.onrender.com/projects",
+    headers={"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"},
+    json={
+        "name": "My First Project",
+        "description": "A project to test the TaskFlow API."
+    }
+)
+print(response.json())
+```
+
+```js JavaScript
+const response = await fetch("https://test-writechoice.onrender.com/projects", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name: "My First Project",
+    description: "A project to test the TaskFlow API."
+  })
+});
+const data = await response.json();
+console.log(data);
+```
+
+</CodeGroup>
+
+**Response:**
+
+```json
+{
+  "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "name": "My First Project",
+  "description": "A project to test the TaskFlow API.",
+  "created_at": "2025-05-12T10:30:00.000Z"
+}
+```
+
+<Warning>
+  Save the `project_id` from this response. You will need it in the next step.
+</Warning>
+
+---
+
+## Step 2 — Create a task
+
+Use the `project_id` from Step 1 to create a task inside your project.
+
+<CodeGroup>
+
+```bash cURL
+curl -X POST https://test-writechoice.onrender.com/tasks \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "title": "Write the README",
+    "description": "Document setup steps and usage examples."
+  }'
+```
+
+```python Python
+response = requests.post(
+    "https://test-writechoice.onrender.com/tasks",
+    headers={"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"},
+    json={
+        "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "title": "Write the README",
+        "description": "Document setup steps and usage examples."
+    }
+)
+print(response.json())
+```
+
+```js JavaScript
+const response = await fetch("https://test-writechoice.onrender.com/tasks", {
+  method: "POST",
+  headers: {
+    "Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a",
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    project_id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    title: "Write the README",
+    description: "Document setup steps and usage examples."
+  })
+});
+const data = await response.json();
+console.log(data);
+```
+
+</CodeGroup>
+
+**Response:**
+
+```json
+{
+  "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+  "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "title": "Write the README",
+  "description": "Document setup steps and usage examples.",
+  "status": "pending",
+  "created_at": "2025-05-12T10:35:00.000Z",
+  "updated_at": "2025-05-12T10:35:00.000Z"
+}
+```
+
+Tasks are created with status `pending` by default. Save the `task_id` for the next steps.
+
+---
+
+## Step 3 — Update the task status
+
+Mark the task as in progress using its `task_id`.
+
+<CodeGroup>
+
+```bash cURL
+curl -X PATCH https://test-writechoice.onrender.com/tasks/f9e8d7c6-b5a4-3210-fedc-ba9876543210 \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{"status": "in_progress"}'
+```
+
+```python Python
+response = requests.patch(
+    "https://test-writechoice.onrender.com/tasks/f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+    headers={"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"},
+    json={"status": "in_progress"}
+)
+print(response.json())
+```
+
+```js JavaScript
+const response = await fetch(
+  "https://test-writechoice.onrender.com/tasks/f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+  {
+    method: "PATCH",
+    headers: {
+      "Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ status: "in_progress" })
+  }
+);
+const data = await response.json();
+console.log(data);
+```
+
+</CodeGroup>
+
+---
+
+## Step 4 — List all tasks in the project
+
+Retrieve all tasks for your project to confirm everything looks right.
+
+<CodeGroup>
+
+```bash cURL
+curl https://test-writechoice.onrender.com/projects/a1b2c3d4-e5f6-7890-abcd-ef1234567890/tasks \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
+```
+
+```python Python
+response = requests.get(
+    "https://test-writechoice.onrender.com/projects/a1b2c3d4-e5f6-7890-abcd-ef1234567890/tasks",
+    headers={"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"}
+)
+print(response.json())
+```
+
+```js JavaScript
+const response = await fetch(
+  "https://test-writechoice.onrender.com/projects/a1b2c3d4-e5f6-7890-abcd-ef1234567890/tasks",
+  { headers: { "Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a" } }
+);
+const data = await response.json();
+console.log(data);
+```
+
+</CodeGroup>
+
+**Response:**
+
+```json
+{
+  "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "total": 1,
+  "tasks": [
+    {
+      "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+      "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "title": "Write the README",
+      "description": "Document setup steps and usage examples.",
+      "status": "in_progress",
+      "created_at": "2025-05-12T10:35:00.000Z",
+      "updated_at": "2025-05-12T11:00:00.000Z"
+    }
+  ]
+}
+```
+
+---
+
+## What's next?
+
+<CardGroup cols={2}>
+  <Card title="Core Workflow" icon="arrows-spin" href="/guides/core-workflow">
+    Understand the full project and task lifecycle.
+  </Card>
+  <Card title="Task Statuses" icon="signal" href="/guides/task-statuses">
+    Learn the three status values and when to use each.
+  </Card>
+  <Card title="Error Reference" icon="triangle-exclamation" href="/guides/errors">
+    See all error codes and how to handle them.
+  </Card>
+  <Card title="API Reference" icon="code" href="/api-reference/overview">
+    Full reference for every endpoint.
+  </Card>
+</CardGroup>

@@ -1,0 +1,89 @@
+---
+title: Task Statuses
+description: TaskFlow tasks have three possible statuses — pending, in_progress, and done.
+---
+
+## The three statuses
+
+Every task in TaskFlow has a `status` field with one of three values:
+
+| Status | Meaning |
+|--------|---------|
+| `pending` | The task has not been started. This is the default when a task is created. |
+| `in_progress` | The task is actively being worked on. |
+| `done` | The task has been completed. |
+
+---
+
+## Default status
+
+Tasks are always created with `status: "pending"`. You cannot set a different initial status at creation time — the field is not accepted in the `POST /tasks` request body.
+
+```json
+{
+  "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
+  "title": "Write tests",
+  "status": "pending",
+  ...
+}
+```
+
+---
+
+## Changing status
+
+Use `PATCH /tasks/{task_id}` to change a task's status at any time. There are no enforced transitions — you can move a task to any valid status from any other status.
+
+```bash
+curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{"status": "in_progress"}'
+```
+
+### Valid transitions
+
+While the API does not enforce a specific direction, the typical progression is:
+
+```
+pending → in_progress → done
+```
+
+You can also move backwards if needed (for example, reopening a completed task by setting it back to `in_progress`).
+
+---
+
+## Invalid status values
+
+Submitting any value outside the three allowed options returns a `400 Bad Request`:
+
+```json
+{
+  "error": "Bad Request",
+  "message": "Invalid status 'Done'. Allowed values are: pending, in_progress, done."
+}
+```
+
+Common mistakes:
+- `"completed"` — use `"done"` instead
+- `"active"` — use `"in_progress"` instead
+- `"todo"` — use `"pending"` instead
+- `"Done"`, `"DONE"`, `"Pending"` — values are **case-sensitive**, always use lowercase
+
+---
+
+## Checking status across a project
+
+To see the current status of all tasks in a project, use `GET /projects/{project_id}/tasks`. The response includes a `total` count and the full task list with current statuses.
+
+```json
+{
+  "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "total": 3,
+  "tasks": [
+    { "title": "Write tests", "status": "done", ... },
+    { "title": "Deploy to staging", "status": "in_progress", ... },
+    { "title": "Update changelog", "status": "pending", ... }
+  ]
+}
+```

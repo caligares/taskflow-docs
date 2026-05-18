@@ -1,0 +1,79 @@
+---
+title: Authentication
+description: All TaskFlow API requests require a Bearer token in the Authorization header.
+---
+
+## How authentication works
+
+Every request to the TaskFlow API must include an `Authorization` header with your API key as a Bearer token.
+
+```http
+Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a
+```
+
+There is no login flow, session management, or token expiry. Your API key is static — include it in every request.
+
+---
+
+## Adding the header
+
+<CodeGroup>
+
+```bash cURL
+curl https://test-writechoice.onrender.com/projects/YOUR_PROJECT_ID/tasks \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
+```
+
+```python Python
+import requests
+
+headers = {"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"}
+
+response = requests.get(
+    "https://test-writechoice.onrender.com/projects/YOUR_PROJECT_ID/tasks",
+    headers=headers
+)
+```
+
+```js JavaScript
+const response = await fetch(
+  "https://test-writechoice.onrender.com/projects/YOUR_PROJECT_ID/tasks",
+  {
+    headers: {
+      "Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"
+    }
+  }
+);
+```
+
+</CodeGroup>
+
+---
+
+## What happens if authentication fails
+
+If you omit the header or use an invalid key, the API returns a `401 Unauthorized` response:
+
+```json
+{
+  "error": "Unauthorized",
+  "message": "Missing or invalid API key. Provide a valid key in the Authorization header as: Bearer <api_key>"
+}
+```
+
+**Common causes:**
+- The `Authorization` header is missing entirely
+- The key is misspelled or has extra whitespace
+- The `Bearer ` prefix is missing (note the space after `Bearer`)
+
+---
+
+## Security best practices
+
+<Warning>
+  Never hardcode your API key in client-side code (browser JavaScript, mobile apps). Anyone who can view your source code can extract it.
+</Warning>
+
+- Store your API key in an environment variable: `TASKFLOW_API_KEY=tf-live-4a8f2c1e9b3d7e6a`
+- Access it in code: `process.env.TASKFLOW_API_KEY` (Node.js) or `os.environ["TASKFLOW_API_KEY"]` (Python)
+- Add your `.env` file to `.gitignore` to avoid committing it to version control

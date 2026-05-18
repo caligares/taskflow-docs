@@ -1,0 +1,77 @@
+---
+title: API Reference
+description: Complete reference for all TaskFlow endpoints, parameters, and responses.
+---
+
+## Base URL
+
+```
+https://test-writechoice.onrender.com
+```
+
+## Authentication
+
+All endpoints require a Bearer token:
+
+```
+Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a
+```
+
+See [Authentication](/authentication) for details.
+
+---
+
+## Endpoints
+
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/projects` | [Create a project](/api-reference/projects/create-project) |
+| `POST` | `/tasks` | [Create a task](/api-reference/tasks/create-task) |
+| `GET` | `/projects/{project_id}/tasks` | [List tasks in a project](/api-reference/tasks/list-tasks) |
+| `PATCH` | `/tasks/{task_id}` | [Update a task](/api-reference/tasks/update-task) |
+| `DELETE` | `/tasks/{task_id}` | [Delete a task](/api-reference/tasks/delete-task) |
+
+---
+
+## Data models
+
+### Project
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `project_id` | string (UUID) | Unique identifier. Auto-generated. |
+| `name` | string | The project name. |
+| `description` | string \| null | Optional description. |
+| `created_at` | string (ISO 8601) | Creation timestamp. |
+
+### Task
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `task_id` | string (UUID) | Unique identifier. Auto-generated. |
+| `project_id` | string (UUID) | The project this task belongs to. |
+| `title` | string | The task title. |
+| `description` | string \| null | Optional description. |
+| `status` | `pending` \| `in_progress` \| `done` | Current task status. |
+| `created_at` | string (ISO 8601) | Creation timestamp. |
+| `updated_at` | string (ISO 8601) | Last update timestamp. |
+
+### Error
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `error` | string | Short error type (e.g. `"Not Found"`). |
+| `message` | string | Human-readable explanation. |
+
+---
+
+## Notes
+
+<Note>
+  The API may take up to 60 seconds to respond on the first request after a period of inactivity. This is expected behavior — retry after waiting.
+</Note>
+
+- All request bodies must use `Content-Type: application/json`
+- All timestamps are UTC in ISO 8601 format
+- All IDs are UUIDs (version 4)
+- Deletion is permanent — there is no soft delete or restore

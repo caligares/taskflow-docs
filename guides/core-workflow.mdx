@@ -1,0 +1,133 @@
+---
+title: Core Workflow
+description: Understand the required order of operations — projects first, then tasks.
+---
+
+## Overview
+
+TaskFlow enforces a strict dependency chain. Each resource depends on the previous one existing first.
+
+```
+POST /projects  →  POST /tasks  →  PATCH /tasks/{id}  or  DELETE /tasks/{id}
+```
+
+You cannot skip steps. Attempting to create a task with a non-existent `project_id` returns a `404`. Attempting to update or delete a task with a non-existent `task_id` returns a `404`.
+
+---
+
+## Step 1: Create a project
+
+A project is the top-level container. You must create at least one before you can create tasks.
+
+```bash
+curl -X POST https://test-writechoice.onrender.com/projects \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Website Redesign"}'
+```
+
+The response contains a `project_id`. **Keep this value** — it is required in Step 2.
+
+```json
+{
+  "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "name": "Website Redesign",
+  "description": null,
+  "created_at": "2025-05-12T10:30:00.000Z"
+}
+```
+
+<Info>
+  The `description` field is optional when creating a project. If omitted, it returns as `null`.
+</Info>
+
+---
+
+## Step 2: Create tasks inside the project
+
+Use the `project_id` from Step 1 to add tasks. You can create as many tasks as needed.
+
+```bash
+curl -X POST https://test-writechoice.onrender.com/tasks \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "title": "Redesign homepage",
+    "description": "Update hero section and navigation."
+  }'
+```
+
+Every new task starts with `status: "pending"` automatically. The response includes a `task_id` you will use in subsequent steps.
+
+---
+
+## Step 3: List tasks to check progress
+
+At any point, retrieve all tasks for a project to see their current state.
+
+```bash
+curl https://test-writechoice.onrender.com/projects/a1b2c3d4-e5f6-7890-abcd-ef1234567890/tasks \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
+```
+
+The response includes a `total` count alongside the task array, which is useful for progress tracking.
+
+---
+
+## Step 4: Update tasks as work progresses
+
+Use `PATCH /tasks/{task_id}` to change a task's status, title, or description. You can update one or more fields in the same request.
+
+**Mark as in progress:**
+```bash
+curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{"status": "in_progress"}'
+```
+
+**Mark as done:**
+```bash
+curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{"status": "done"}'
+```
+
+**Update title and status together:**
+```bash
+curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
+  -H "Content-Type: application/json" \
+  -d '{"title": "Redesign homepage + mobile nav", "status": "in_progress"}'
+```
+
+---
+
+## Step 5: Delete tasks when done
+
+Remove completed or cancelled tasks permanently.
+
+```bash
+curl -X DELETE https://test-writechoice.onrender.com/tasks/TASK_ID \
+  -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
+```
+
+<Warning>
+  Deletion is permanent. There is no trash or undo. Verify the `task_id` before deleting.
+</Warning>
+
+---
+
+## Full workflow at a glance
+
+```
+1. POST /projects              → get project_id
+2. POST /tasks                 → get task_id (repeat for each task)
+3. GET  /projects/:id/tasks    → review all tasks
+4. PATCH /tasks/:id            → update status / title / description
+5. DELETE /tasks/:id           → remove when no longer needed
+```
+
+For the status lifecycle specifically, see [Task Statuses](/guides/task-statuses).
