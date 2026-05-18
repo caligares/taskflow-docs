@@ -1,0 +1,76 @@
+{
+  "theme": "mint",
+  "name": "TaskFlow",
+  "colors": {
+    "primary": "#a56477",
+    "light": "#ffb6c8",
+    "dark": "#4b1226"
+  },
+  "favicon": "/favicon.svg",
+  "logo": {
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
+  },
+  "api": {
+    "openapi": "openapi.yaml"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Support",
+        "href": "mailto:support@taskflow.dev"
+      }
+    ],
+    "primary": {
+      "type": "button",
+      "label": "Get API Key",
+      "href": "https://taskflow.dev/signup"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/taskflow"
+    }
+  },
+  "navigation": {
+    "groups": [
+      {
+        "group": "Getting Started",
+        "pages": [
+          "introduction",
+          "quickstart",
+          "authentication"
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          "guides/core-workflow",
+          "guides/task-statuses",
+          "guides/errors"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "pages": [
+          "api-reference/overview",
+          {
+            "group": "Projects",
+            "pages": [
+              "api-reference/projects/create-project"
+            ]
+          },
+          {
+            "group": "Tasks",
+            "pages": [
+              "api-reference/tasks/create-task",
+              "api-reference/tasks/list-tasks",
+              "api-reference/tasks/update-task",
+              "api-reference/tasks/delete-task"
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
