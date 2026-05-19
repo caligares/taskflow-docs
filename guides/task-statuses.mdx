@@ -1,28 +1,28 @@
 ---
-title: Status das Tarefas
-description: Tarefas no TaskFlow têm três status possíveis. pending, in_progress e done.
+title: Task Statuses
+description: TaskFlow tasks have three possible statuses. pending, in_progress, and done.
 ---
 
-## Os três status
+## The three statuses
 
-Toda tarefa no TaskFlow tem um campo `status` com um de três valores:
+Every task in TaskFlow has a `status` field with one of three values:
 
-| Status | Significado |
-|--------|-------------|
-| `pending` | A tarefa ainda não foi iniciada. Este é o padrão ao criar uma tarefa. |
-| `in_progress` | A tarefa está sendo trabalhada ativamente. |
-| `done` | A tarefa foi concluída. |
+| Status | Meaning |
+|--------|---------|
+| `pending` | The task has not been started. This is the default when a task is created. |
+| `in_progress` | The task is actively being worked on. |
+| `done` | The task has been completed. |
 
 ---
 
-## Status padrão
+## Default status
 
-Tarefas são sempre criadas com `status: "pending"`. Não é possível definir um status diferente no momento da criação: o campo não é aceito no body do `POST /tasks`.
+Tasks are always created with `status: "pending"`. You cannot set a different initial status at creation time, as the field is not accepted in the `POST /tasks` request body.
 
 ```json
 {
   "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
-  "title": "Escrever testes",
+  "title": "Write tests",
   "status": "pending",
   ...
 }
@@ -30,9 +30,9 @@ Tarefas são sempre criadas com `status: "pending"`. Não é possível definir u
 
 ---
 
-## Alterando o status
+## Changing status
 
-Use `PATCH /tasks/{task_id}` para alterar o status de uma tarefa a qualquer momento. Não existem transições obrigatórias: você pode mover uma tarefa para qualquer status válido a partir de qualquer outro.
+Use `PATCH /tasks/{task_id}` to change a task's status at any time. There are no enforced transitions, so you can move a task to any valid status from any other status.
 
 ```bash
 curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
@@ -41,21 +41,21 @@ curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
   -d '{"status": "in_progress"}'
 ```
 
-### Progressão típica
+### Typical progression
 
-Embora a API não force uma direção específica, a progressão habitual é:
+While the API does not enforce a specific direction, the usual flow is:
 
 ```
 pending -> in_progress -> done
 ```
 
-Você também pode voltar atrás se necessário, por exemplo, reabrindo uma tarefa concluída definindo-a de volta para `in_progress`.
+You can also move backwards if needed, for example reopening a completed task by setting it back to `in_progress`.
 
 ---
 
-## Valores de status inválidos
+## Invalid status values
 
-Enviar qualquer valor fora das três opções permitidas retorna `400 Bad Request`:
+Submitting any value outside the three allowed options returns a `400 Bad Request`:
 
 ```json
 {
@@ -64,26 +64,26 @@ Enviar qualquer valor fora das três opções permitidas retorna `400 Bad Reques
 }
 ```
 
-Erros comuns:
-- `"completed"` deve ser substituído por `"done"`
-- `"active"` deve ser substituído por `"in_progress"`
-- `"todo"` deve ser substituído por `"pending"`
-- `"Done"`, `"DONE"` e `"Pending"` não são aceitos. Os valores são **case-sensitive** e precisam estar em minúsculas
+Common mistakes:
+- `"completed"` should be replaced with `"done"`
+- `"active"` should be replaced with `"in_progress"`
+- `"todo"` should be replaced with `"pending"`
+- `"Done"`, `"DONE"` and `"Pending"` are not accepted because the values are **case-sensitive** and must be lowercase
 
 ---
 
-## Verificando o status de todas as tarefas do projeto
+## Checking status across a project
 
-Para ver o status atual de todas as tarefas de um projeto, use `GET /projects/{project_id}/tasks`. A resposta inclui o contador `total` e a lista completa de tarefas com seus status atuais.
+To see the current status of all tasks in a project, use `GET /projects/{project_id}/tasks`. The response includes a `total` count and the full task list with current statuses.
 
 ```json
 {
   "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
   "total": 3,
   "tasks": [
-    { "title": "Escrever testes", "status": "done", ... },
-    { "title": "Deploy para staging", "status": "in_progress", ... },
-    { "title": "Atualizar changelog", "status": "pending", ... }
+    { "title": "Write tests", "status": "done", ... },
+    { "title": "Deploy to staging", "status": "in_progress", ... },
+    { "title": "Update changelog", "status": "pending", ... }
   ]
 }
 ```

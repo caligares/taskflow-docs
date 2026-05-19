@@ -1,78 +1,78 @@
 ---
-title: Referência da API
-description: Referência completa de todos os endpoints, parâmetros e respostas do TaskFlow.
+title: API Reference
+description: Complete reference for all TaskFlow endpoints, parameters, and responses.
 ---
 
-## URL base
+## Base URL
 
 ```
 https://test-writechoice.onrender.com
 ```
 
-## Autenticação
+## Authentication
 
-Todos os endpoints exigem um Bearer token:
+All endpoints require a Bearer token:
 
 ```
 Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a
 ```
 
-Veja [Autenticação](/authentication) para mais detalhes.
+See [Authentication](/authentication) for details.
 
 ---
 
 ## Endpoints
 
-| Método | Caminho | Descrição |
-|--------|---------|-----------|
-| `POST` | `/projects` | [Criar um projeto](/api-reference/projects/create-project) |
-| `POST` | `/tasks` | [Criar uma tarefa](/api-reference/tasks/create-task) |
-| `GET` | `/projects/{project_id}/tasks` | [Listar tarefas de um projeto](/api-reference/tasks/list-tasks) |
-| `PATCH` | `/tasks/{task_id}` | [Atualizar uma tarefa](/api-reference/tasks/update-task) |
-| `DELETE` | `/tasks/{task_id}` | [Deletar uma tarefa](/api-reference/tasks/delete-task) |
+| Method | Path | Description |
+|--------|------|-------------|
+| `POST` | `/projects` | [Create a project](/api-reference/projects/create-project) |
+| `POST` | `/tasks` | [Create a task](/api-reference/tasks/create-task) |
+| `GET` | `/projects/{project_id}/tasks` | [List tasks in a project](/api-reference/tasks/list-tasks) |
+| `PATCH` | `/tasks/{task_id}` | [Update a task](/api-reference/tasks/update-task) |
+| `DELETE` | `/tasks/{task_id}` | [Delete a task](/api-reference/tasks/delete-task) |
 
 ---
 
-## Modelos de dados
+## Data models
 
 ### Project
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `project_id` | string (UUID) | Identificador único. Gerado automaticamente. |
-| `name` | string | Nome do projeto. |
-| `description` | string ou null | Descrição opcional. |
-| `created_at` | string (ISO 8601) | Timestamp de criação. |
+| Field | Type | Description |
+|-------|------|-------------|
+| `project_id` | string (UUID) | Unique identifier, auto-generated |
+| `name` | string | The project name |
+| `description` | string or null | Optional description |
+| `created_at` | string (ISO 8601) | Creation timestamp |
 
 ### Task
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `task_id` | string (UUID) | Identificador único. Gerado automaticamente. |
-| `project_id` | string (UUID) | O projeto ao qual esta tarefa pertence. |
-| `title` | string | Título da tarefa. |
-| `description` | string ou null | Descrição opcional. |
-| `status` | `pending`, `in_progress` ou `done` | Status atual da tarefa. |
-| `created_at` | string (ISO 8601) | Timestamp de criação. |
-| `updated_at` | string (ISO 8601) | Timestamp da última atualização. |
+| Field | Type | Description |
+|-------|------|-------------|
+| `task_id` | string (UUID) | Unique identifier, auto-generated |
+| `project_id` | string (UUID) | The project this task belongs to |
+| `title` | string | The task title |
+| `description` | string or null | Optional description |
+| `status` | `pending`, `in_progress`, or `done` | Current task status |
+| `created_at` | string (ISO 8601) | Creation timestamp |
+| `updated_at` | string (ISO 8601) | Last update timestamp |
 
 ### Error
 
-| Campo | Tipo | Descrição |
-|-------|------|-----------|
-| `error` | string | Tipo curto do erro (ex: `"Not Found"`). |
-| `message` | string | Explicação legível por humanos. |
+| Field | Type | Description |
+|-------|------|-------------|
+| `error` | string | Short error type such as `"Not Found"` |
+| `message` | string | Human-readable explanation |
 
 ---
 
-## Observações
+## Notes
 
 <Note>
-  A API pode levar até 60 segundos para responder na primeira requisição após inatividade. Isso é esperado, então aguarde alguns segundos e tente novamente.
+  The API may take up to 60 seconds to respond on the first request after inactivity. This is expected, so wait a moment and try again.
 </Note>
 
-- Todos os bodies de requisição devem usar `Content-Type: application/json`
-- Todos os timestamps são UTC no formato ISO 8601
-- Todos os IDs são UUIDs (versão 4)
-- Campos desconhecidos enviados no body são silenciosamente ignorados
-- A exclusão é permanente e não pode ser desfeita
+- All request bodies must use `Content-Type: application/json`
+- All timestamps are UTC in ISO 8601 format
+- All IDs are UUIDs (version 4)
+- Unknown fields in the request body are silently ignored
+- Deletion is permanent and cannot be undone

@@ -1,51 +1,51 @@
 ---
-title: Fluxo Principal
-description: Entenda a ordem obrigatória das operações. Projetos precisam existir antes das tarefas.
+title: Core Workflow
+description: Understand the required order of operations. Projects must exist before tasks can be created.
 ---
 
-## Visão geral
+## Overview
 
-O TaskFlow exige uma cadeia de dependência. Cada recurso depende do anterior existir primeiro.
+TaskFlow enforces a strict dependency chain. Each resource depends on the previous one existing first.
 
 ```
-POST /projects -> POST /tasks -> PATCH /tasks/{id} ou DELETE /tasks/{id}
+POST /projects -> POST /tasks -> PATCH /tasks/{id} or DELETE /tasks/{id}
 ```
 
-Não é possível pular etapas. Tentar criar uma tarefa com um `project_id` inexistente retorna `404`. Tentar atualizar ou deletar uma tarefa com um `task_id` inexistente também retorna `404`.
+You cannot skip steps. Attempting to create a task with a non-existent `project_id` returns a `404`. Attempting to update or delete a task with a non-existent `task_id` also returns a `404`.
 
 ---
 
-## Passo 1: Criar um projeto
+## Step 1. Create a project
 
-Um projeto é o container principal. Você precisa criar pelo menos um antes de criar tarefas.
+A project is the top-level container. You must create at least one before you can create tasks.
 
 ```bash
 curl -X POST https://test-writechoice.onrender.com/projects \
   -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
   -H "Content-Type: application/json" \
-  -d '{"name": "Redesign do Site"}'
+  -d '{"name": "Website Redesign"}'
 ```
 
-A resposta contém um `project_id`. **Guarde este valor**: ele é necessário no Passo 2.
+The response contains a `project_id`. Keep this value safe, as it is required in Step 2.
 
 ```json
 {
   "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "name": "Redesign do Site",
+  "name": "Website Redesign",
   "description": null,
   "created_at": "2025-05-12T10:30:00.000Z"
 }
 ```
 
 <Info>
-  O campo `description` é opcional ao criar um projeto. Se omitido, retorna como `null`.
+  The `description` field is optional when creating a project. If omitted, it returns as `null`.
 </Info>
 
 ---
 
-## Passo 2: Criar tarefas dentro do projeto
+## Step 2. Create tasks inside the project
 
-Use o `project_id` do Passo 1 para adicionar tarefas. Você pode criar quantas tarefas precisar.
+Use the `project_id` from Step 1 to add tasks. You can create as many tasks as needed.
 
 ```bash
 curl -X POST https://test-writechoice.onrender.com/tasks \
@@ -53,33 +53,33 @@ curl -X POST https://test-writechoice.onrender.com/tasks \
   -H "Content-Type: application/json" \
   -d '{
     "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "title": "Redesenhar a homepage",
-    "description": "Atualizar a seção hero e a navegação."
+    "title": "Redesign homepage",
+    "description": "Update hero section and navigation."
   }'
 ```
 
-Toda nova tarefa começa com `status: "pending"` automaticamente. A resposta inclui um `task_id` que você vai usar nas etapas seguintes.
+Every new task starts with `status: "pending"` automatically. The response includes a `task_id` you will use in subsequent steps.
 
 ---
 
-## Passo 3: Listar tarefas para acompanhar o progresso
+## Step 3. List tasks to check progress
 
-A qualquer momento, busque todas as tarefas de um projeto para ver o estado atual.
+At any point, retrieve all tasks for a project to see their current state.
 
 ```bash
 curl https://test-writechoice.onrender.com/projects/a1b2c3d4-e5f6-7890-abcd-ef1234567890/tasks \
   -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
 ```
 
-A resposta inclui um contador `total` junto com a lista de tarefas, útil para acompanhar o progresso.
+The response includes a `total` count alongside the task array, which is useful for progress tracking.
 
 ---
 
-## Passo 4: Atualizar tarefas conforme o trabalho avança
+## Step 4. Update tasks as work progresses
 
-Use `PATCH /tasks/{task_id}` para alterar o status, título ou descrição de uma tarefa. Você pode atualizar um ou mais campos na mesma requisição.
+Use `PATCH /tasks/{task_id}` to change a task's status, title, or description. You can update one or more fields in the same request.
 
-**Marcar como em andamento:**
+**Mark as in progress:**
 ```bash
 curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
   -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
@@ -87,7 +87,7 @@ curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
   -d '{"status": "in_progress"}'
 ```
 
-**Marcar como concluída:**
+**Mark as done:**
 ```bash
 curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
   -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
@@ -95,23 +95,23 @@ curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
   -d '{"status": "done"}'
 ```
 
-**Atualizar título e status juntos:**
+**Update title and status together:**
 ```bash
 curl -X PATCH https://test-writechoice.onrender.com/tasks/TASK_ID \
   -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
   -H "Content-Type: application/json" \
-  -d '{"title": "Redesenhar homepage e nav mobile", "status": "in_progress"}'
+  -d '{"title": "Redesign homepage and mobile nav", "status": "in_progress"}'
 ```
 
 <Note>
-  Campos desconhecidos enviados no body são silenciosamente ignorados. A API processa apenas os campos válidos e retorna sucesso.
+  Unknown fields sent in the request body are silently ignored. The API processes only the valid fields and returns a success response.
 </Note>
 
 ---
 
-## Passo 5: Deletar tarefas quando não forem mais necessárias
+## Step 5. Delete tasks when done
 
-Remova tarefas concluídas ou canceladas permanentemente.
+Remove completed or cancelled tasks permanently.
 
 ```bash
 curl -X DELETE https://test-writechoice.onrender.com/tasks/TASK_ID \
@@ -119,19 +119,19 @@ curl -X DELETE https://test-writechoice.onrender.com/tasks/TASK_ID \
 ```
 
 <Warning>
-  A exclusão é permanente. Não existe lixeira nem desfazer. Confirme o `task_id` antes de deletar.
+  Deletion is permanent. There is no trash or undo. Verify the `task_id` before deleting.
 </Warning>
 
 ---
 
-## Fluxo completo resumido
+## Full workflow at a glance
 
 ```
-1. POST /projects              -> obtém project_id
-2. POST /tasks                 -> obtém task_id (repita para cada tarefa)
-3. GET  /projects/:id/tasks    -> revisa todas as tarefas
-4. PATCH /tasks/:id            -> atualiza status, título ou descrição
-5. DELETE /tasks/:id           -> remove quando não for mais necessário
+1. POST /projects              -> get project_id
+2. POST /tasks                 -> get task_id (repeat for each task)
+3. GET  /projects/:id/tasks    -> review all tasks
+4. PATCH /tasks/:id            -> update status, title, or description
+5. DELETE /tasks/:id           -> remove when no longer needed
 ```
 
-Para entender o ciclo de vida dos status especificamente, veja [Status das Tarefas](/guides/task-statuses).
+For the status lifecycle specifically, see [Task Statuses](/guides/task-statuses).

@@ -1,72 +1,72 @@
 ---
-title: Introdução
-description: TaskFlow é uma API REST para gerenciar projetos e tarefas. Crie projetos, adicione tarefas, acompanhe o progresso e remova o que não precisa, tudo via HTTP.
+title: Introduction
+description: TaskFlow is a REST API for managing projects and tasks. Create projects, add tasks, track progress, and clean up, all over HTTP.
 ---
 
-## O que é o TaskFlow?
+## What is TaskFlow?
 
-TaskFlow é uma API de gerenciamento de tarefas. Ela fornece os blocos básicos para organizar trabalho em **projetos** e **tarefas**, acompanhar o status conforme o trabalho avança e integrar gerenciamento de tarefas em qualquer aplicação.
+TaskFlow is a lightweight task management API. It gives you the building blocks to organize work into **projects** and **tasks**, track status as work progresses, and integrate task management into any application.
 
-A API é stateless e segue as convenções padrão REST. Todas as requisições e respostas usam JSON.
+The API is stateless and follows standard REST conventions. All requests and responses use JSON.
 
-## Conceitos principais
+## Key concepts
 
 <CardGroup cols={2}>
-  <Card title="Projetos" icon="folder">
-    Um projeto é um container para tarefas. Toda tarefa precisa pertencer a um projeto. Crie um projeto primeiro e use o `project_id` retornado para criar tarefas dentro dele.
+  <Card title="Projects" icon="folder">
+    A project is a container for tasks. Every task must belong to a project. Create a project first, then use its `project_id` to create tasks inside it.
   </Card>
-  <Card title="Tarefas" icon="check">
-    Uma tarefa é uma unidade de trabalho dentro de um projeto. Tarefas têm um título, uma descrição opcional e um status que avança de `pending` para `in_progress` e depois para `done`.
+  <Card title="Tasks" icon="check">
+    A task is a unit of work inside a project. Tasks have a title, an optional description, and a status that moves from `pending` to `in_progress` and then to `done`.
   </Card>
 </CardGroup>
 
-## Como funciona
+## How it works
 
-A API tem cinco endpoints:
+The API has five endpoints:
 
-| Método | Endpoint | O que faz |
-|--------|----------|-----------|
-| `POST` | `/projects` | Cria um projeto |
-| `POST` | `/tasks` | Cria uma tarefa dentro de um projeto |
-| `GET` | `/projects/{project_id}/tasks` | Lista todas as tarefas de um projeto |
-| `PATCH` | `/tasks/{task_id}` | Atualiza o título, descrição ou status de uma tarefa |
-| `DELETE` | `/tasks/{task_id}` | Remove uma tarefa permanentemente |
+| Method | Endpoint | What it does |
+|--------|----------|--------------|
+| `POST` | `/projects` | Creates a project |
+| `POST` | `/tasks` | Creates a task inside a project |
+| `GET` | `/projects/{project_id}/tasks` | Lists all tasks in a project |
+| `PATCH` | `/tasks/{task_id}` | Updates a task's title, description, or status |
+| `DELETE` | `/tasks/{task_id}` | Permanently removes a task |
 
-## Ordem das operações
+## Order of operations
 
-As operações dependem umas das outras. A API exige esta ordem:
+Operations depend on each other. The API enforces this order:
 
 ```
-Criar projeto -> Criar tarefas -> Atualizar / Listar / Deletar tarefas
+Create project -> Create tasks -> Update / List / Delete tasks
 ```
 
-Não é possível criar uma tarefa sem um `project_id` válido. Não é possível atualizar ou deletar uma tarefa sem um `task_id` válido. O guia de [Fluxo Principal](/guides/core-workflow) explica isso em detalhes.
+You cannot create a task without a valid `project_id`. You cannot update or delete a task without a valid `task_id`. The [Core Workflow](/guides/core-workflow) guide walks through this in detail.
 
-## URL base
+## Base URL
 
-Todas as requisições vão para:
+All requests go to:
 
 ```
 https://test-writechoice.onrender.com
 ```
 
 <Note>
-  A API pode levar até 60 segundos para responder na primeira requisição após um período de inatividade. Isso é esperado. As requisições seguintes respondem normalmente.
+  The API may take up to 60 seconds to respond on the first request after a period of inactivity. This is expected behavior and subsequent requests respond normally.
 </Note>
 
-## Próximos passos
+## Next steps
 
 <CardGroup cols={2}>
-  <Card title="Início Rápido" icon="rocket" href="/quickstart">
-    Faça sua primeira chamada à API em menos de 5 minutos.
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Make your first API call in under 5 minutes.
   </Card>
-  <Card title="Autenticação" icon="key" href="/authentication">
-    Saiba como autenticar cada requisição.
+  <Card title="Authentication" icon="key" href="/authentication">
+    Learn how to authenticate every request.
   </Card>
-  <Card title="Fluxo Principal" icon="arrow-right" href="/guides/core-workflow">
-    Siga o fluxo completo de projeto, tarefa e atualização.
+  <Card title="Core Workflow" icon="arrow-right" href="/guides/core-workflow">
+    Follow the full project, task, and update flow.
   </Card>
-  <Card title="Referência da API" icon="code" href="/api-reference/overview">
-    Veja todos os endpoints, parâmetros e schemas de resposta.
+  <Card title="API Reference" icon="code" href="/api-reference/overview">
+    See every endpoint, parameter, and response schema.
   </Card>
 </CardGroup>

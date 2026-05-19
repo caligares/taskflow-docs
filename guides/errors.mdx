@@ -1,11 +1,11 @@
 ---
-title: Erros
-description: O TaskFlow usa códigos HTTP padrão. Toda resposta de erro inclui um tipo legível por máquina e uma mensagem legível por humanos.
+title: Errors
+description: TaskFlow uses standard HTTP status codes. Every error response includes a machine-readable type and a human-readable message.
 ---
 
-## Formato das respostas de erro
+## Error response format
 
-Todos os erros seguem esta estrutura:
+All errors follow this structure:
 
 ```json
 {
@@ -14,42 +14,41 @@ Todos os erros seguem esta estrutura:
 }
 ```
 
-- `error` é um tipo de erro curto e consistente, útil para tratamento programático
-- `message` traz uma explicação em texto simples do que deu errado
+The `error` field is a short, consistent error type useful for programmatic handling. The `message` field provides a plain-English explanation of what went wrong.
 
 ---
 
-## Códigos de status
+## Status codes
 
 ### 400 Bad Request
 
-O body da requisição está faltando um campo obrigatório ou contém um valor inválido.
+The request body is missing a required field or contains an invalid value.
 
-**Causas comuns e mensagens exatas:**
+**Common causes and exact messages:**
 
-| Erro | Mensagem retornada |
-|------|--------------------|
-| `name` ausente no `POST /projects` | `"The 'name' field is required and must be a non-empty string."` |
-| `title` ausente no `POST /tasks` | `"The 'title' field is required and must be a non-empty string."` |
-| Valor de `status` inválido | `"Invalid status 'Done'. Allowed values are: pending, in_progress, done."` |
+| Mistake | Error message |
+|---------|--------------|
+| Missing `name` on `POST /projects` | `"The 'name' field is required and must be a non-empty string."` |
+| Missing `title` on `POST /tasks` | `"The 'title' field is required and must be a non-empty string."` |
+| Invalid `status` value | `"Invalid status 'Done'. Allowed values are: pending, in_progress, done."` |
 
 <Note>
-  Os valores de status são **case-sensitive**. `"done"` funciona. `"Done"` e `"DONE"` retornam 400.
+  Status values are **case-sensitive**. `"done"` works, while `"Done"` and `"DONE"` return 400.
 </Note>
 
 <Note>
-  Campos desconhecidos (como `"prioridade": "alta"`) são silenciosamente ignorados. A API processa os campos válidos e retorna sucesso.
+  Unknown fields such as `"priority": "high"` are silently ignored. The API processes the valid fields and returns a success response.
 </Note>
 
-**Como resolver:** Verifique o body da requisição na [Referência da API](/api-reference/overview). Confirme que todos os campos obrigatórios estão presentes e os valores correspondem aos tipos esperados.
+**How to fix it:** Check the request body against the [API Reference](/api-reference/overview) and make sure all required fields are present with the correct types.
 
 ---
 
 ### 401 Unauthorized
 
-O header `Authorization` está ausente ou a chave de API é inválida.
+The `Authorization` header is missing or the API key is invalid.
 
-**Exemplo:**
+**Example:**
 ```json
 {
   "error": "Unauthorized",
@@ -57,15 +56,15 @@ O header `Authorization` está ausente ou a chave de API é inválida.
 }
 ```
 
-**Como resolver:** Adicione o header `Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a` à sua requisição. Verifique se não há espaços extras e se o prefixo `Bearer ` está incluído. Veja [Autenticação](/authentication) para mais detalhes.
+**How to fix it:** Add the header `Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a` to your request. Make sure there are no extra spaces and that the `Bearer ` prefix is included. See [Authentication](/authentication) for details.
 
 ---
 
 ### 404 Not Found
 
-O recurso referenciado na URL ou no body da requisição não existe.
+The resource referenced in the URL or request body does not exist.
 
-**Projeto não encontrado:**
+**Project not found:**
 ```json
 {
   "error": "Not Found",
@@ -73,7 +72,7 @@ O recurso referenciado na URL ou no body da requisição não existe.
 }
 ```
 
-**Tarefa não encontrada:**
+**Task not found:**
 ```json
 {
   "error": "Not Found",
@@ -81,16 +80,16 @@ O recurso referenciado na URL ou no body da requisição não existe.
 }
 ```
 
-Causas comuns:
-- Usar um `project_id` ou `task_id` que nunca foi criado
-- Erro de digitação no ID
-- Tentar atualizar ou deletar uma tarefa que já foi deletada
+Common causes:
+- Using a `project_id` or `task_id` that was never created
+- A typo in the ID
+- Attempting to update or delete a task that was already deleted
 
-**Como resolver:** Verifique o ID que está usando. Obtenha os IDs a partir da resposta do `POST /projects` ou `POST /tasks`.
+**How to fix it:** Verify the ID you are using. IDs come from the response of `POST /projects` or `POST /tasks`.
 
 ---
 
-## Tratando erros no código
+## Handling errors in code
 
 <CodeGroup>
 
@@ -100,18 +99,18 @@ import requests
 response = requests.post(
     "https://test-writechoice.onrender.com/tasks",
     headers={"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"},
-    json={"project_id": "id-invalido", "title": "Minha tarefa"}
+    json={"project_id": "invalid-id", "title": "My task"}
 )
 
 if response.status_code == 404:
     error = response.json()
-    print(f"Não encontrado: {error['message']}")
+    print(f"Not found: {error['message']}")
 elif response.status_code == 400:
     error = response.json()
-    print(f"Requisição inválida: {error['message']}")
+    print(f"Bad request: {error['message']}")
 elif response.ok:
     task = response.json()
-    print(f"Tarefa criada: {task['task_id']}")
+    print(f"Created task: {task['task_id']}")
 ```
 
 ```js JavaScript
@@ -121,7 +120,7 @@ const response = await fetch("https://test-writechoice.onrender.com/tasks", {
     "Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a",
     "Content-Type": "application/json"
   },
-  body: JSON.stringify({ project_id: "id-invalido", title: "Minha tarefa" })
+  body: JSON.stringify({ project_id: "invalid-id", title: "My task" })
 });
 
 const data = await response.json();
@@ -129,7 +128,7 @@ const data = await response.json();
 if (!response.ok) {
   console.error(`${response.status} ${data.error}: ${data.message}`);
 } else {
-  console.log("Tarefa criada:", data.task_id);
+  console.log("Created task:", data.task_id);
 }
 ```
 
@@ -137,10 +136,10 @@ if (!response.ok) {
 
 ---
 
-## Referência rápida
+## Quick reference
 
-| Código | Erro | Causa provável |
-|--------|------|----------------|
-| `400` | Bad Request | Campo ausente ou inválido no body da requisição |
-| `401` | Unauthorized | Chave de API ausente ou inválida |
-| `404` | Not Found | Projeto ou tarefa referenciado não existe |
+| Code | Error | Likely cause |
+|------|-------|--------------|
+| `400` | Bad Request | Missing or invalid field in the request body |
+| `401` | Unauthorized | Missing or invalid API key |
+| `404` | Not Found | Referenced project or task does not exist |
