@@ -11,6 +11,16 @@
     "light": "#f2c4d0",
     "dark": "#c47a8a"
   },
+  "tabs": [
+    {
+      "name": "Guides",
+      "url": "guides"
+    },
+    {
+      "name": "API Reference",
+      "url": "api-reference"
+    }
+  ],
   "anchors": [
     {
       "name": "Getting Started",
