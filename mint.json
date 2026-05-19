@@ -55,6 +55,7 @@
     {
       "group": "Guides",
       "pages": [
+        "guides/overview",
         "guides/core-workflow",
         "guides/task-statuses",
         "guides/errors"

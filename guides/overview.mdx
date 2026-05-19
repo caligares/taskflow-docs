@@ -1,0 +1,55 @@
+---
+title: Overview
+description: A simple REST API for managing projects and tasks. Create, track, and organize work over HTTP.
+---
+
+## What is TaskFlow?
+
+TaskFlow is a lightweight task management API. It gives you the building blocks to organize work into **projects** and **tasks**, track status as work progresses, and integrate task management into any application.
+
+The API is stateless and follows standard REST conventions. All requests and responses use JSON.
+
+## Key concepts
+
+<CardGroup cols={2}>
+  <Card title="Projects" icon="folder">
+    A project is a container for tasks. Every task must belong to a project. Create a project first, then use its `project_id` to create tasks inside it.
+  </Card>
+  <Card title="Tasks" icon="check">
+    A task is a unit of work inside a project. Tasks have a title, an optional description, and a status that moves from `pending` to `in_progress` and then to `done`.
+  </Card>
+</CardGroup>
+
+## How it works
+
+The API has five endpoints:
+
+| Method | Endpoint | What it does |
+|--------|----------|--------------|
+| `POST` | `/projects` | Creates a project |
+| `POST` | `/tasks` | Creates a task inside a project |
+| `GET` | `/projects/{project_id}/tasks` | Lists all tasks in a project |
+| `PATCH` | `/tasks/{task_id}` | Updates a task's title, description, or status |
+| `DELETE` | `/tasks/{task_id}` | Permanently removes a task |
+
+## Order of operations
+
+Operations depend on each other. The API enforces this order:
+
+```
+Create project -> Create tasks -> Update / List / Delete tasks
+```
+
+You cannot create a task without a valid `project_id`. You cannot update or delete a task without a valid `task_id`. The [Core Workflow](/guides/core-workflow) guide walks through this in detail.
+
+## Base URL
+
+All requests go to:
+
+```
+https://test-writechoice.onrender.com
+```
+
+<Note>
+  The API may take up to 60 seconds to respond on the first request after a period of inactivity. This is expected behavior and subsequent requests respond normally.
+</Note>
