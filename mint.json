@@ -47,7 +47,7 @@
     {
       "group": "Getting Started",
       "pages": [
-        "introduction",
+        "guides/overview",
         "quickstart",
         "authentication"
       ]
@@ -55,7 +55,6 @@
     {
       "group": "Guides",
       "pages": [
-        "guides/overview",
         "guides/core-workflow",
         "guides/task-statuses",
         "guides/errors"
