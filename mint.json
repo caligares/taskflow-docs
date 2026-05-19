@@ -47,6 +47,7 @@
     {
       "group": "Getting Started",
       "pages": [
+        "introduction",
         "guides/overview",
         "quickstart",
         "authentication"
