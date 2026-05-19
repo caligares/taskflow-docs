@@ -13,25 +13,53 @@ mode: "custom"
   padding: "80px 24px 60px",
   gap: "16px"
 }}>
-  <h1 style={{ fontSize: "3rem", fontWeight: "700", margin: "0" }}>TaskFlow API</h1>
+  <img
+    src="/logo/light.svg"
+    alt="TaskFlow"
+    style={{ height: "60px" }}
+    className="block dark:hidden"
+  />
+  <img
+    src="/logo/dark.svg"
+    alt="TaskFlow"
+    style={{ height: "60px" }}
+    className="hidden dark:block"
+  />
   <p style={{ fontSize: "1.125rem", color: "gray", maxWidth: "520px", margin: "0" }}>
     A lightweight REST API for managing projects and tasks. Create, track, and organize work over HTTP.
   </p>
 </div>
 
-<CardGroup cols={2}>
-  <Card
-    title="Getting Started"
-    icon="rocket"
-    href="/quickstart"
-  >
-    Learn how to authenticate and make your first API call in under 5 minutes.
-  </Card>
-  <Card
-    title="API Reference"
-    icon="code"
-    href="/api-reference/overview"
-  >
-    Explore all available endpoints, parameters, and response schemas.
-  </Card>
-</CardGroup>
+<div style={{
+  display: "flex",
+  gap: "12px",
+  justifyContent: "center",
+  marginTop: "32px"
+}}>
+  <a href="/quickstart" style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "10px 20px",
+    borderRadius: "8px",
+    border: "1px solid #e8a0b4",
+    color: "#e8a0b4",
+    textDecoration: "none",
+    fontWeight: "500"
+  }}>
+    Getting Started
+  </a>
+  <a href="/api-reference/overview" style={{
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    padding: "10px 20px",
+    borderRadius: "8px",
+    border: "1px solid #e8a0b4",
+    color: "#e8a0b4",
+    textDecoration: "none",
+    fontWeight: "500"
+  }}>
+    API Reference
+  </a>
+</div>

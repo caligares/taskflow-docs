@@ -11,6 +11,18 @@
     "light": "#f2c4d0",
     "dark": "#c47a8a"
   },
+  "anchors": [
+    {
+      "name": "Getting Started",
+      "icon": "rocket",
+      "url": "quickstart"
+    },
+    {
+      "name": "API Reference",
+      "icon": "code",
+      "url": "api-reference/overview"
+    }
+  ],
   "topbarLinks": [
     {
       "name": "Support",
