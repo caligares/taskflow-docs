@@ -1,26 +1,26 @@
 ---
-title: Authentication
-description: All TaskFlow API requests require a Bearer token in the Authorization header.
+title: Autenticação
+description: Todas as requisições à API do TaskFlow precisam de um Bearer token no header Authorization.
 ---
 
-## How authentication works
+## Como funciona a autenticação
 
-Every request to the TaskFlow API must include an `Authorization` header with your API key as a Bearer token.
+Toda requisição à API do TaskFlow deve incluir um header `Authorization` com sua chave de API como Bearer token.
 
 ```http
 Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a
 ```
 
-There is no login flow, session management, or token expiry. Your API key is static — include it in every request.
+Não existe fluxo de login, gerenciamento de sessão ou expiração de token. Sua chave de API é estática e deve ser incluída em cada requisição.
 
 ---
 
-## Adding the header
+## Adicionando o header
 
 <CodeGroup>
 
 ```bash cURL
-curl https://test-writechoice.onrender.com/projects/YOUR_PROJECT_ID/tasks \
+curl https://test-writechoice.onrender.com/projects/SEU_PROJECT_ID/tasks \
   -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a"
 ```
 
@@ -30,14 +30,14 @@ import requests
 headers = {"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"}
 
 response = requests.get(
-    "https://test-writechoice.onrender.com/projects/YOUR_PROJECT_ID/tasks",
+    "https://test-writechoice.onrender.com/projects/SEU_PROJECT_ID/tasks",
     headers=headers
 )
 ```
 
 ```js JavaScript
 const response = await fetch(
-  "https://test-writechoice.onrender.com/projects/YOUR_PROJECT_ID/tasks",
+  "https://test-writechoice.onrender.com/projects/SEU_PROJECT_ID/tasks",
   {
     headers: {
       "Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"
@@ -50,9 +50,9 @@ const response = await fetch(
 
 ---
 
-## What happens if authentication fails
+## O que acontece se a autenticação falhar
 
-If you omit the header or use an invalid key, the API returns a `401 Unauthorized` response:
+Se você omitir o header ou usar uma chave inválida, a API retorna `401 Unauthorized`:
 
 ```json
 {
@@ -61,19 +61,19 @@ If you omit the header or use an invalid key, the API returns a `401 Unauthorize
 }
 ```
 
-**Common causes:**
-- The `Authorization` header is missing entirely
-- The key is misspelled or has extra whitespace
-- The `Bearer ` prefix is missing (note the space after `Bearer`)
+Causas comuns:
+- O header `Authorization` está completamente ausente
+- A chave está com erro de digitação ou espaços extras
+- O prefixo `Bearer ` está faltando (note o espaço depois de `Bearer`)
 
 ---
 
-## Security best practices
+## Boas práticas de segurança
 
 <Warning>
-  Never hardcode your API key in client-side code (browser JavaScript, mobile apps). Anyone who can view your source code can extract it.
+  Nunca deixe sua chave de API exposta em código client-side (JavaScript no browser, apps mobile). Qualquer pessoa que consiga ver o código-fonte pode extraí-la.
 </Warning>
 
-- Store your API key in an environment variable: `TASKFLOW_API_KEY=tf-live-4a8f2c1e9b3d7e6a`
-- Access it in code: `process.env.TASKFLOW_API_KEY` (Node.js) or `os.environ["TASKFLOW_API_KEY"]` (Python)
-- Add your `.env` file to `.gitignore` to avoid committing it to version control
+- Armazene sua chave em uma variável de ambiente: `TASKFLOW_API_KEY=tf-live-4a8f2c1e9b3d7e6a`
+- Acesse no código: `process.env.TASKFLOW_API_KEY` (Node.js) ou `os.environ["TASKFLOW_API_KEY"]` (Python)
+- Adicione seu arquivo `.env` ao `.gitignore` para evitar commitar a chave no repositório

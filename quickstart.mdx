@@ -1,29 +1,29 @@
 ---
-title: Quickstart
-description: Create a project, add a task, and update its status in under 5 minutes.
+title: Início Rápido
+description: Crie um projeto, adicione uma tarefa e atualize o status em menos de 5 minutos.
 ---
 
-This guide walks through the complete TaskFlow workflow from scratch. By the end, you will have created a project, added a task to it, updated the task status, and listed your tasks.
+Este guia percorre o fluxo completo do TaskFlow do zero. Ao final, você terá criado um projeto, adicionado uma tarefa, atualizado o status e listado as tarefas.
 
-## Before you begin
+## Antes de começar
 
-You need your API key: `tf-live-4a8f2c1e9b3d7e6a`
+Você vai precisar da sua chave de API: `tf-live-4a8f2c1e9b3d7e6a`
 
-Include it in every request as a Bearer token:
+Inclua em cada requisição como Bearer token:
 
 ```
 Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a
 ```
 
 <Note>
-  The API may take up to 60 seconds to respond on the first request if it has been idle. Wait and retry if you get a timeout.
+  A API pode levar até 60 segundos para responder na primeira requisição após inatividade. Aguarde e tente novamente se receber timeout.
 </Note>
 
 ---
 
-## Step 1 — Create a project
+## Passo 1. Criar um projeto
 
-Every task must belong to a project, so start by creating one.
+Toda tarefa precisa pertencer a um projeto, então comece criando um.
 
 <CodeGroup>
 
@@ -32,8 +32,8 @@ curl -X POST https://test-writechoice.onrender.com/projects \
   -H "Authorization: Bearer tf-live-4a8f2c1e9b3d7e6a" \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "My First Project",
-    "description": "A project to test the TaskFlow API."
+    "name": "Meu Primeiro Projeto",
+    "description": "Um projeto para testar a API do TaskFlow."
   }'
 ```
 
@@ -44,8 +44,8 @@ response = requests.post(
     "https://test-writechoice.onrender.com/projects",
     headers={"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"},
     json={
-        "name": "My First Project",
-        "description": "A project to test the TaskFlow API."
+        "name": "Meu Primeiro Projeto",
+        "description": "Um projeto para testar a API do TaskFlow."
     }
 )
 print(response.json())
@@ -59,8 +59,8 @@ const response = await fetch("https://test-writechoice.onrender.com/projects", {
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    name: "My First Project",
-    description: "A project to test the TaskFlow API."
+    name: "Meu Primeiro Projeto",
+    description: "Um projeto para testar a API do TaskFlow."
   })
 });
 const data = await response.json();
@@ -69,26 +69,26 @@ console.log(data);
 
 </CodeGroup>
 
-**Response:**
+**Resposta:**
 
 ```json
 {
   "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "name": "My First Project",
-  "description": "A project to test the TaskFlow API.",
+  "name": "Meu Primeiro Projeto",
+  "description": "Um projeto para testar a API do TaskFlow.",
   "created_at": "2025-05-12T10:30:00.000Z"
 }
 ```
 
 <Warning>
-  Save the `project_id` from this response. You will need it in the next step.
+  Salve o `project_id` desta resposta. Você vai precisar dele no próximo passo.
 </Warning>
 
 ---
 
-## Step 2 — Create a task
+## Passo 2. Criar uma tarefa
 
-Use the `project_id` from Step 1 to create a task inside your project.
+Use o `project_id` do Passo 1 para criar uma tarefa dentro do projeto.
 
 <CodeGroup>
 
@@ -98,8 +98,8 @@ curl -X POST https://test-writechoice.onrender.com/tasks \
   -H "Content-Type: application/json" \
   -d '{
     "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    "title": "Write the README",
-    "description": "Document setup steps and usage examples."
+    "title": "Escrever o README",
+    "description": "Documentar os passos de configuração e exemplos de uso."
   }'
 ```
 
@@ -109,8 +109,8 @@ response = requests.post(
     headers={"Authorization": "Bearer tf-live-4a8f2c1e9b3d7e6a"},
     json={
         "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-        "title": "Write the README",
-        "description": "Document setup steps and usage examples."
+        "title": "Escrever o README",
+        "description": "Documentar os passos de configuração e exemplos de uso."
     }
 )
 print(response.json())
@@ -125,8 +125,8 @@ const response = await fetch("https://test-writechoice.onrender.com/tasks", {
   },
   body: JSON.stringify({
     project_id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-    title: "Write the README",
-    description: "Document setup steps and usage examples."
+    title: "Escrever o README",
+    description: "Documentar os passos de configuração e exemplos de uso."
   })
 });
 const data = await response.json();
@@ -135,27 +135,27 @@ console.log(data);
 
 </CodeGroup>
 
-**Response:**
+**Resposta:**
 
 ```json
 {
   "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
   "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-  "title": "Write the README",
-  "description": "Document setup steps and usage examples.",
+  "title": "Escrever o README",
+  "description": "Documentar os passos de configuração e exemplos de uso.",
   "status": "pending",
   "created_at": "2025-05-12T10:35:00.000Z",
   "updated_at": "2025-05-12T10:35:00.000Z"
 }
 ```
 
-Tasks are created with status `pending` by default. Save the `task_id` for the next steps.
+Tarefas são criadas com status `pending` por padrão. Salve o `task_id` para os próximos passos.
 
 ---
 
-## Step 3 — Update the task status
+## Passo 3. Atualizar o status da tarefa
 
-Mark the task as in progress using its `task_id`.
+Marque a tarefa como em andamento usando o `task_id`.
 
 <CodeGroup>
 
@@ -195,9 +195,9 @@ console.log(data);
 
 ---
 
-## Step 4 — List all tasks in the project
+## Passo 4. Listar todas as tarefas do projeto
 
-Retrieve all tasks for your project to confirm everything looks right.
+Busque todas as tarefas do projeto para confirmar que está tudo certo.
 
 <CodeGroup>
 
@@ -225,7 +225,7 @@ console.log(data);
 
 </CodeGroup>
 
-**Response:**
+**Resposta:**
 
 ```json
 {
@@ -235,8 +235,8 @@ console.log(data);
     {
       "task_id": "f9e8d7c6-b5a4-3210-fedc-ba9876543210",
       "project_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
-      "title": "Write the README",
-      "description": "Document setup steps and usage examples.",
+      "title": "Escrever o README",
+      "description": "Documentar os passos de configuração e exemplos de uso.",
       "status": "in_progress",
       "created_at": "2025-05-12T10:35:00.000Z",
       "updated_at": "2025-05-12T11:00:00.000Z"
@@ -247,19 +247,19 @@ console.log(data);
 
 ---
 
-## What's next?
+## O que vem a seguir?
 
 <CardGroup cols={2}>
-  <Card title="Core Workflow" icon="arrows-spin" href="/guides/core-workflow">
-    Understand the full project and task lifecycle.
+  <Card title="Fluxo Principal" icon="arrows-spin" href="/guides/core-workflow">
+    Entenda o ciclo de vida completo de projetos e tarefas.
   </Card>
-  <Card title="Task Statuses" icon="signal" href="/guides/task-statuses">
-    Learn the three status values and when to use each.
+  <Card title="Status das Tarefas" icon="signal" href="/guides/task-statuses">
+    Conheça os três valores de status e quando usar cada um.
   </Card>
-  <Card title="Error Reference" icon="triangle-exclamation" href="/guides/errors">
-    See all error codes and how to handle them.
+  <Card title="Erros" icon="triangle-exclamation" href="/guides/errors">
+    Veja todos os códigos de erro e como tratá-los.
   </Card>
-  <Card title="API Reference" icon="code" href="/api-reference/overview">
-    Full reference for every endpoint.
+  <Card title="Referência da API" icon="code" href="/api-reference/overview">
+    Referência completa de todos os endpoints.
   </Card>
 </CardGroup>
